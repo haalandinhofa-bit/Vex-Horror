@@ -28,7 +28,9 @@ public class BlackFogRenderer extends MobRenderer<BlackFogEntity, HumanoidModel<
     public void render(BlackFogEntity entity, float entityYaw, float partialTick,
                       PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
-        poseStack.scale(0.88F, 1.28F, 0.88F);
+        // Keep normal limb/head width while making the silhouette slightly taller.
+        // The previous 0.88 horizontal scale made the arms, legs and head look too thin.
+        poseStack.scale(1.0F, 1.12F, 1.0F);
         model.prepareMobModel(entity, 0.0F, 0.0F, partialTick);
         model.setupAnim(entity, 0.0F, 0.0F, entity.tickCount + partialTick,
                 entity.getYRot(), entity.getXRot());
