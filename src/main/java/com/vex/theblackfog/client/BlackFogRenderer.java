@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class BlackFogRenderer extends MobRenderer<BlackFogEntity, HumanoidModel<BlackFogEntity>> {
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("minecraft", "textures/entity/enderman/enderman.png");
+            new ResourceLocation("minecraft", "textures/entity/player/wide/steve.png");
 
     public BlackFogRenderer(EntityRendererProvider.Context context) {
         super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.45F);
