@@ -22,3 +22,10 @@ jobs:
           gradle-version: '8.8'
       - name: Build
         run: gradle build --no-daemon
+      - name: Upload mod JAR
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: theblackfog-${{ github.sha }}
+          path: build/libs/*.jar
+          if-no-files-found: error
