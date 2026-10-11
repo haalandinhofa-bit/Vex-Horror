@@ -59,3 +59,16 @@ processResources {
         expand replaceProperties
     }
 }
+
+// Decode the user-provided Blockbench PNG texture before resource processing.
+tasks.register('decodeBlackFogTexture') {
+    inputs.file('src/main/resources/assets/theblackfog/textures/entity/black_fog.png.b64')
+    outputs.file('src/main/resources/assets/theblackfog/textures/entity/black_fog.png')
+    doLast {
+        def encoded = file('src/main/resources/assets/theblackfog/textures/entity/black_fog.png.b64')
+        def decoded = file('src/main/resources/assets/theblackfog/textures/entity/black_fog.png')
+        decoded.parentFile.mkdirs()
+        decoded.bytes = java.util.Base64.decoder.decode(encoded.text.trim())
+    }
+}
+processResources.dependsOn tasks.named('decodeBlackFogTexture')
