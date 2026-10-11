@@ -64,12 +64,44 @@ public class BlackFogEntity extends Monster {
     @Override
     public void tick() {
         super.tick();
-        if (!level().isClientSide && !isHunting() && getTarget() != null) {
-            setTarget(null);
-        }
-        if (!level().isClientSide && isHunting() && tickCount % 80 == 0) {
-            // Quiet, sparse particles make the creature feel connected to the fog.
-            level().broadcastEntityEvent(this, (byte) 61);
+        if (level().isClientSide) return;
+
+        if (!isHunting()) {
+            if (getTarget() != null) setTarget(null);
+
+            Player nearest = level().getNearestPlayer(this, 32.0D);
+            if (nearest != null) {
+                double distance = distanceTo(nearest);
+                boolean staring = false;
+                if (distance > 0.001D && nearest.hasLineOfSight(this)) {
+                    net.minecraft.world.phys.Vec3 toCreature =
+                            position().add(0.0D, getBbHeight() * 0.65D, 0.0D)
+                                    .subtract(nearest.getEyePosition()).normalize();
+                    staring = nearest.getLookAngle().normalize().dot(toCreature) > 0.94D;
+                }
+
+                if (distance < 3.0D) {
+                    discard();
+                    return;
+                }
+                if (staring) {
+                    watchedTicks++;
+                    if (watchedTicks >= 60) {
+                        discard();
+                        return;
+                    }
+                } else {
+                    watchedTicks = 0;
+                }
+            } else {
+                watchedTicks = 0;
+            }
+        } else {
+            watchedTicks = 0;
+            if (tickCount % 80 == 0) {
+                // Sparse smoke particles give the night form a subtle supernatural presence.
+                level().broadcastEntityEvent(this, (byte) 61);
+            }
         }
     }
 
