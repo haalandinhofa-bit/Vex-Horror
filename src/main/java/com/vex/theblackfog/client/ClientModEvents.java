@@ -12,6 +12,11 @@ public final class ClientModEvents {
     private ClientModEvents() {}
 
     @SubscribeEvent
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(BlackFogModel.LAYER_LOCATION, BlackFogModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLACK_FOG.get(), BlackFogRenderer::new);
     }
